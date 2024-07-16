@@ -61,7 +61,9 @@ if [ $(wc -l <subs.txt) -lt 2 ]; then
 else
     echo -e "\n\e[32m[+]\e[0m Probing subdomains with httpx\n\n"
     httpx -l subs.txt -fr -random-agent -sc -title -td -server -retries 3 -fc 404 -lc -t 500
-    httpx -l subs.txt -fr -random-agent -retries 5 -fc 404 -t 500 -silent -o active_subs.txt
+    httpx -l subs.txt -fr -random-agent -retries 5 -fc 404 -t 500 -silent | anew active_subs.txt
+
+    echo -e "\n\e[32m[+]\e[0m $(wc -l < active_subs.txt) subs are active \n\n"
 fi
 
 # TODO: Add dnsx, shuffledns and more tools
