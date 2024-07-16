@@ -37,7 +37,7 @@ function parse_provider_config() {
 
 parse_provider_config
 
-echo -e "\e[32m[+]\e[0m Probing target with httpx"
+echo -e "\e[32m[+]\e[0m Probing target with httpx\n"
 host_probe=$(httpx -u "$target" -fr -sc -title -td -server -retries 3 -fc 404 -lc -t 500)
 echo "$host_probe"
 if [ -z "$host_probe" ]; then
@@ -49,21 +49,35 @@ mkdir -p "$target"
 cd "$target"
 
 echo -e "\n\e[32m[+]\e[0m Hunting subdomains with chaos \n\n"
-chaos-client -d "$target" -key "$chaos_key" -o subs_chaos
+chaos-client -d "$target" -key "$chaos_key" -o subs_chaos 1>/dev/null
 
 echo -e "\n\e[32m[+]\e[0m Hunting subdomains with subfinder \n\n"
-subfinder -d "$target" -all -recursive -o subs_subf -active
+subfinder -d "$target" -all -recursive -o subs_subf -active 1>/dev/null
 echo "$target" >> subs.txt
-cat subs_* | anew subs.txt
+cat subs_* | anew subs.txt >/dev/null
+
+rm subs_*
 
 if [ $(wc -l <subs.txt) -lt 2 ]; then
     echo -e "\n No subdomains found"
 else
     echo -e "\n\e[32m[+]\e[0m Probing subdomains with httpx\n\n"
-    httpx -l subs.txt -fr -random-agent -sc -title -td -server -retries 3 -fc 404 -lc -t 500
-    httpx -l subs.txt -fr -random-agent -retries 5 -fc 404 -t 500 -silent -o active_subs.txt
+    httpx -l subs.txt -fr -random-agent -sc -title -td -server -retries 3 -fc 404 -lc -t 500 1>/dev/null
+    httpx -l subs.txt -fr -random-agent -retries 5 -fc 404 -t 500 -silent -o active_subs.txt 1>/dev/null
+
+    if [ -f "../active_subs.txt" ]; then
+        changes=$(diff active_subs.txt ../active_subs.txt)
+        if [ -n "$changes" ]; then
+            echo "$changes" | notify
+        fi
+    else
+        cp active_subs.txt ..
+    fi
+
+    echo -e "\n\e[32m[+]\e[0m Active subdomains:\n"
+    cat active_subs.txt
 fi
 
-# TODO: Add dnsx, shuffledns and more tools
+echo -e "\n\e[32m[+]\e[0m Active subdomains:\n"
 
-cd ..
+sleep 3600

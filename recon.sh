@@ -19,7 +19,7 @@ if [ -z "$1" ]; then
 fi
 
 target=$1
-echo -e "\e[32m[+]\e[0m Processing target: $target\n"
+echo -e "\e[32m[+]\e[0m Processing target: $target\n\n"
 
 function parse_provider_config() {
     provider_config_path="$HOME/.config/subfinder/provider-config.yaml"
@@ -28,7 +28,7 @@ function parse_provider_config() {
         chaos_key=$(awk '/chaos:/ {getline; print $2}' "$provider_config_path")
         if [ -z "$chaos_key" ]; then
             echo -e "\e[33m[-]\e[0m CHAOS API key not found in provider-config.yaml"
-            chaos_key=""  
+            exit 1  
         fi
     else
         echo -e "\e[33m[-]\e[0m Provider config file not found! Continuing without API keys"
@@ -37,7 +37,7 @@ function parse_provider_config() {
 
 parse_provider_config
 
-echo -e "\e[32m[+]\e[0m Probing target with httpx"
+echo -e "\e[32m[+]\e[0m Probing target with httpx\n"
 host_probe=$(httpx -u "$target" -fr -sc -title -td -server -retries 3 -fc 404 -lc -t 500)
 echo "$host_probe"
 if [ -z "$host_probe" ]; then
