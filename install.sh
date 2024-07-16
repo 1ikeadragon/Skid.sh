@@ -10,7 +10,7 @@ echo 'export PATH=$PATH:$HOME/.pdtm/go/bin:$HOME/go/bin' >>~/.bashrc
 
 source ~/.bashrc
 
-pdtm -i subfinder,dnsx,httpx,katana,chaos-client,nuclei
+pdtm -i subfinder,dnsx,httpx,katana,chaos-client,nuclei,notify
 
 wget -P ${HOME}/.local/bin https://github.com/holly-hacker/git-dumper/releases/download/v0.1.0/git-dumper-linux && chmod +x ${HOME}/.local/bin/git-dumper-linux
 
