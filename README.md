@@ -43,14 +43,14 @@ If you just want to perform recon on your target(s) it's advisable to run the `r
 
 Subdomain monitoring with periodic updates via notifypd.
 1. Add your API keys and webhooks in the right places. 
-1. Run the script -> `./submon.sh target.com || ./submon.sh -f targets.txt`
+1. Run the script -> `./submon.sh target.com`
 
 #### ASM.SH
 
 Asset discovery, monitoring and vulnerability scanning. Run it and forget it.
 
 1. Add your API keys and webhooks in the right places. 
-1. Run the script -> `./asm.sh target.com || ./asm.sh -f targets.txt`
+1. Run the script -> `./asm.sh target.com`
 
 ### Footnote
 
