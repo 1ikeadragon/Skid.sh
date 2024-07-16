@@ -56,6 +56,8 @@ subfinder -d "$target" -all -recursive -o subs_subf -active
 echo "$target" >> subs.txt
 cat subs_* | anew subs.txt
 
+rm subs_*
+
 if [ $(wc -l <subs.txt) -lt 2 ]; then
     echo -e "\n No subdomains found"
 else
