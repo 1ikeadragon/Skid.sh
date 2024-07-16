@@ -43,7 +43,7 @@ If you just want to perform recon on your target(s) it's advisable to run the `r
 
 Subdomain monitoring with periodic updates via notifypd.
 1. Add your API keys and webhooks in the right places. 
-1. Run the script -> `./submon.sh target.com`
+1. Run the script -> `./submon.sh target.com HRS`
 
 #### ASM.SH
 
