@@ -10,7 +10,7 @@ echo -e '
 /____/_/|_/_/\__,_(_)____/_/ /_/ 
                                 
                           
-                          - @1ike4dr4g6on
+                          - @1ikeadragon
 '
 
 if [ -z "$1" ]; then
