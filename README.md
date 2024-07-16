@@ -26,7 +26,7 @@ run `install.sh` to install tools locally. Script is configured for an Ubuntu VP
 ### Usage
 
 #### RECON.SH
-If you just want to perform recon on your target(s) it's advisable to run the `recon.sh` script. It will perform all the recon you need for you. For subdomain monitoring, use `submon.sh`. For a mini asm-esuq setup, run `asm.sh`.
+If you just want to perform recon on your target(s) it's advisable to run the `recon.sh` script. It will perform all the recon you need for you. For subdomain monitoring, use `submon.sh`. For a mini asm-esque setup, run `asm.sh`.
 
 1. Add your API keys in the right places for subfinder and notify.
 1. Run the script `./recon.sh target.com || ./recon.sh -f targets.txt`
