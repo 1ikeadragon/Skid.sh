@@ -89,6 +89,7 @@ function run_monitoring() {
                 echo -e "$formatted_changes" | notify
             fi
         else
+            cat active_subs.txt | notify
             cp active_subs.txt ../old_active_subs.txt
         fi
 
