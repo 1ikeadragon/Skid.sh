@@ -65,13 +65,13 @@ function run_monitoring() {
     else
         echo -e "\n\e[32m[+]\e[0m Probing subdomains with httpx\n\n"
         httpx -l subs.txt -random-agent -sc -title -td -server -retries 3 -fc 404 -lc -t 500 1>/dev/null
-        httpx -l subs.txt -random-agent -retries 5 -fc 404 -t 500 -silent -o active_subs.txt 1>/dev/null
+        httpx -l subs.txt -random-agent -retries 5 -fc 404 -t 500 -silent -nc -o active_subs.txt 1>/dev/null
 
         sort active_subs.txt -o active_subs.txt
 
         if [ -f "../old_active_subs.txt" ]; then
             sort ../old_active_subs.txt -o ../old_active_subs.txt
-            changes=$(diff active_subs.txt ../old_active_subs.txt)
+            changes=$(diff ../old_active_subs.txt active_subs.txt)
             if [ -n "$changes" ]; then
                 # Extract added lines (those starting with >) and removed lines (those starting with <)
                 added_lines=$(echo "$changes" | grep "^>" | sed 's/^> //')
@@ -80,16 +80,16 @@ function run_monitoring() {
                 # Format the output for notify
                 formatted_changes=""
                 if [ -n "$added_lines" ]; then
-                    formatted_changes+="Added subdomains:\n$added_lines\n"
+                    formatted_changes+="Added subdomains:\n\n$added_lines\n"
                 fi
                 if [ -n "$removed_lines" ]; then
-                    formatted_changes+="Removed subdomains:\n$removed_lines\n"
+                    formatted_changes+="Removed subdomains:\n\n$removed_lines\n"
                 fi
 
-                echo -e "$formatted_changes" | notify
+                echo -e "$formatted_changes" | notify -silent
             fi
         else
-            cat active_subs.txt | notify
+            cat active_subs.txt | notify -silent
             cp active_subs.txt ../old_active_subs.txt
         fi
 
