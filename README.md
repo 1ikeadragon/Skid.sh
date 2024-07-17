@@ -27,9 +27,6 @@ run `install.sh` to install tools locally. Script is configured for an Ubuntu VP
 
 If you just want to perform recon on your target(s) it's advisable to run the `submon.sh` script. It will perform all the recon you need for you and contineuously monitor for new assets. For a mini asm-esque setup, run `asm.sh`.
 
-1. Add your API keys in the right places for subfinder and notify.
-1. Run the script `./recon.sh target.com || ./recon.sh -f targets.txt`
-
 #### SKID.SH
 1. Add your API keys in the right places. 
 1. Run the script -> `./skid.sh target.com || ./skid.sh -f targets.txt`
