@@ -29,10 +29,6 @@ function run_monitoring() {
         if [ -f "$provider_config_path" ]; then
             echo -e "\e[32m[+]\e[0m Provider config file found! Parsing config...\n"
             chaos_key=$(awk '/chaos:/ {getline; print $2}' "$provider_config_path")
-            if [ -z "$chaos_key" ]; then
-                echo -e "\e[33m[-]\e[0m CHAOS API key not found in provider-config.yaml"
-                chaos_key=""  
-            fi
         else
             echo -e "\e[33m[-]\e[0m Provider config file not found! Continuing without API keys"
         fi
@@ -47,57 +43,57 @@ function run_monitoring() {
         exit 1
     fi
 
-    mkdir -p "$target"
-    cd "$target"
-
     echo -e "\n\e[32m[+]\e[0m Hunting subdomains with chaos \n\n"
-    chaos-client -d "$target" -key "$chaos_key" -o subs_chaos 1>/dev/null
+    subs_chaos=$(chaos-client -d "$target" -key "$chaos_key")
 
     echo -e "\n\e[32m[+]\e[0m Hunting subdomains with subfinder \n\n"
-    subfinder -d "$target" -all -recursive -o subs_subf -active 1>/dev/null
-    echo "$target" >> subs.txt
-    cat subs_* | anew subs.txt >/dev/null
+    subs_subf=$(subfinder -d "$target" -all -recursive -silent)
 
-    rm subs_*
+    # removing http https
+    all_subs=$(echo -e "$subs_chaos\n$subs_subf" | sed 's|http[s]\?://||' | sort -u)
 
-    if [ $(wc -l <subs.txt) -lt 2 ]; then
+    if [ -z "$all_subs" ]; then
         echo -e "\n No subdomains found"
     else
         echo -e "\n\e[32m[+]\e[0m Probing subdomains with httpx\n\n"
-        httpx -l subs.txt -random-agent -sc -title -td -server -retries 3 -fc 404 -lc -t 500 1>/dev/null
-        httpx -l subs.txt -random-agent -retries 5 -fc 404 -t 500 -silent -nc -o active_subs.txt 1>/dev/null
+        active_subs=$(echo "$all_subs" | httpx -silent -random-agent -retries 3 -fc 404 -nc)
 
-        sort active_subs.txt -o active_subs.txt
-
-        if [ -f "../old_active_subs.txt" ]; then
-            sort ../old_active_subs.txt -o ../old_active_subs.txt
-            changes=$(diff ../old_active_subs.txt active_subs.txt)
-            if [ -n "$changes" ]; then
-                # Extract added lines (those starting with >) and removed lines (those starting with <)
-                added_lines=$(echo "$changes" | grep "^>" | sed 's/^> //')
-                removed_lines=$(echo "$changes" | grep "^<" | sed 's/^< //')
-
-                # Format the output for notify
-                formatted_changes=""
-                if [ -n "$added_lines" ]; then
-                    formatted_changes+="Added subdomains:\n\n$added_lines\n"
-                fi
-                if [ -n "$removed_lines" ]; then
-                    formatted_changes+="Removed subdomains:\n\n$removed_lines\n"
-                fi
-
-                echo -e "$formatted_changes" | notify -silent
-            fi
+        if [ -z "$active_subs" ]; then
+            echo -e "\n No active subdomains found"
         else
-            cat active_subs.txt | notify -silent
-            cp active_subs.txt ../old_active_subs.txt
+            sorted_active_subs=$(echo "$active_subs" | sed 's|http[s]\?://||' | sort)
+
+            if [ -f "active_subs.txt" ]; then
+                sorted_old_active_subs=$(sort active_subs.txt | sed 's|http[s]\?://||')
+
+                changes=$(diff <(echo "$sorted_old_active_subs") <(echo "$sorted_active_subs"))
+
+                if [ -n "$changes" ]; then
+                    added_lines=$(echo "$changes" | grep "^>" | sed 's/^> //')
+                    removed_lines=$(echo "$changes" | grep "^<" | sed 's/^< //')
+
+                    formatted_changes=""
+                    if [ -n "$added_lines" ]; then
+                        formatted_changes+="Added subdomains:\n\n$added_lines\n"
+                    fi
+                    if [ -n "$removed_lines" ]; then
+                        formatted_changes+="Removed subdomains:\n\n$removed_lines\n"
+                    fi
+
+                    echo -e "$formatted_changes" | notify -silent
+                else
+                    echo -e "\n\e[32m[+]\e[0m No changes detected in active subdomains.\n"
+                fi
+            else
+                echo -e "\n\e[32m[+]\e[0m Creating active_subs.txt for the first time.\n"
+                echo "$sorted_active_subs" > active_subs.txt
+                echo "$sorted_active_subs" | notify -silent
+            fi
+
+            echo -e "\n\e[32m[+]\e[0m Active subdomains:\n"
+            echo "$sorted_active_subs"
         fi
-
-        echo -e "\n\e[32m[+]\e[0m Active subdomains:\n"
-        cat active_subs.txt
     fi
-
-    cd ..
 }
 
 while true; do
