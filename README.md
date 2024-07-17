@@ -1,4 +1,4 @@
-# Bug Bounty Automation Setup
+# Automation goes brrrr
 
 ```
    _____ __   _     __       __
