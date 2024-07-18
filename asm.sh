@@ -14,7 +14,7 @@ echo -e '
 '
 
 # subdomain enum -> get origin ip -> filter cloudflare -> monitor for changes -> run nuclei
-
+# monitored changes: js changes, tech detect changes
 
 
 if [ -z "$1" ] || [ -z "$2" ]; then
@@ -28,3 +28,7 @@ hrs=$2
 ./submon.sh $target $hrs
 
 read active_subs.txt    
+
+function vuln_scan()
+function origin_ip_find()
+function filter_ip()

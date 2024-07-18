@@ -27,14 +27,6 @@ run `install.sh` to install tools locally. Script is configured for an Ubuntu VP
 
 If you just want to perform recon on your target(s) it's advisable to run the `submon.sh` script. It will perform all the recon you need for you and contineuously monitor for new assets. For a mini asm-esque setup, run `asm.sh`.
 
-#### SKID.SH
-1. Add your API keys in the right places. 
-1. Run the script -> `./skid.sh target.com || ./skid.sh -f targets.txt`
-1. Subdomain enumeration -> url crawling -> param mining -> js analysis -> lfi/xss/sqli automation
-1. Profit
-
->This script is meant to be the slowest by design as it deals with a lot of data. Expect results to appear slow.
-
 #### SUBMON.SH
 
 Subdomain monitoring with periodic updates via notifypd.
@@ -47,6 +39,15 @@ Asset discovery, monitoring and vulnerability scanning. Run it and forget it.
 
 1. Add your API keys and webhooks in the right places. 
 1. Run the script -> `./asm.sh target.com`
+
+#### SKID.SH
+
+1. Add your API keys in the right places. 
+1. Run the script -> `./skid.sh target.com || ./skid.sh -f targets.txt`
+1. Subdomain enumeration -> url crawling -> param mining -> js analysis -> lfi/xss/sqli automation
+1. Profit
+
+>This script is meant to be the slowest by design as it fuzzes a lot and looks for low hanging fruits only. Expect results to appear slow.
 
 ### Footnote
 
