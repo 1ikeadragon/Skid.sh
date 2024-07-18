@@ -1,3 +1,0 @@
-echo.nmap.org
-scanme.nmap.org
-svn.nmap.org
