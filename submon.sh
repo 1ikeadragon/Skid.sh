@@ -36,7 +36,7 @@ function run_monitoring() {
     parse_provider_config
 
     echo -e "\e[32m[+]\e[0m Probing target with httpx\n"
-    host_probe=$(httpx -u "$target" -fr -silent -sc -title -td -server -retries 3 -fc 404 -lc -t 500)
+    host_probe=$(httpx -u "$target" -fr -silent -sc -title -td -server -retries 3 -fc 404 -lc)
     if [ -z "$host_probe" ]; then
         echo -e "\n Host seems down. Did you type the right address?"
         exit 1
@@ -46,7 +46,7 @@ function run_monitoring() {
     subs=$(subfinder -d "$target" -all -recursive -silent)
 
     echo -e "\n\e[32m[+]\e[0m Probing subdomains with httpx\n\n"
-    active_subs=$(echo "$subs" | httpx -silent -random-agent -retries 3 -fc 404,301,302 -nc)
+    active_subs=$(echo "$subs" | httpx -silent -random-agent -retries 3 -fc 404,301,302 -nc -t 500)
 
     if [ -z "$active_subs" ]; then
         echo -e "\n No active subdomains found"
