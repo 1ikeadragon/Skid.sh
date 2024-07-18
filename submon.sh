@@ -28,7 +28,6 @@ function run_monitoring() {
         provider_config_path="$HOME/.config/subfinder/provider-config.yaml"
         if [ -f "$provider_config_path" ]; then
             echo -e "\e[32m[+]\e[0m Provider config file found! Parsing config...\n"
-            chaos_key=$(awk '/chaos:/ {getline; print $2}' "$provider_config_path")
         else
             echo -e "\e[33m[-]\e[0m Provider config file not found! Continuing without API keys"
         fi
@@ -43,15 +42,12 @@ function run_monitoring() {
         exit 1
     fi
 
-    echo -e "\n\e[32m[+]\e[0m Hunting subdomains with chaos \n\n"
-    subs_chaos=$(chaos-client -d "$target" -key "$chaos_key")
-
     echo -e "\n\e[32m[+]\e[0m Hunting subdomains with subfinder \n\n"
-    subs_subf=$(subfinder -d "$target" -all -recursive -silent)
+    subs_subf=$(subfinder -d "$target" -all -recursive -silent -active)
 
     # removing http https
-    all_subs=$(echo -e "$subs_chaos\n$subs_subf" | sed 's|http[s]\?://||' | sort -u)
-
+    all_subs=$(echo -e "$subs_subf" | sed 's|http[s]\?://||' | sort -u)
+-
     if [ -z "$all_subs" ]; then
         echo -e "\n No subdomains found"
     else
