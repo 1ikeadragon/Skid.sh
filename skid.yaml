@@ -1,0 +1,43 @@
+subfinder:
+  chaos: 
+    - safsfaf-311-4e113-accg2
+  certspotter: 
+    - 31-31h1b
+  bevigil: 
+    - lfh2112-31-31h1b
+  shodan: 
+    - jrajllfafieifhalfaflalfh2112-31-31h1b
+  urlscan: 
+    - fhhahsjrajllfafieifhalfaflalfh2112-31-31h1b
+  zoomeye: 
+    - fhhahsjrajllfafieifhalfaflalfh2112-31-31h1b
+  intelx: 
+    - ccsf-f3-3wf-sbbcnn-afa5
+  virustotal: 
+    - ccc882f3e9d2-38b48eebdee7fa06807ec360125cd64f674
+  binaryedge: 
+    - 10010001111c-1101-ssaff-ad42-ddd5e77c4548
+  censys: 
+    - bx6e18d-fcc3s-45x3-11c7-sff2ffllg:Abc23JJVk0afafakj
+
+webhooks:
+  discord:
+    - id: "submon"
+      discord_channel: "skidsh"
+      discord_username: "submon"
+      discord_format: "{{data}}"
+      discord_webhook_url: "https://discord.com/api/webhooks/XXXXXXXX"
+    - id: "crawl"
+      discord_channel: "skidcrawl"
+      discord_username: "crawler"
+      discord_format: "{{data}}"
+      discord_webhook_url: "https://discord.com/api/webhooks/XXXXXXXX"
+
+
+wordlists:
+  resolver:
+    - "/usr/share/wordlists/dns.txt"
+  subdomain:
+    - "/usr/share/wordlists/sub.txt"
+  directory:
+    - "/usr/share/wordlists/directorybrute.txt"
