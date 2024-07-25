@@ -13,7 +13,7 @@ echo -e '
 
 '
 
-if [ -z "$1" ] || [ -z "$2" ]; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
     echo -e "\033[33m[-]\033[0m usage: submon.sh target.com HRS skid.yaml"
     exit 1
 fi
@@ -36,13 +36,11 @@ function run_monitoring() {
             notify_setup=$(yq eval .webhooks "$skidyml")
             
             echo -e "\e[32m[+]\e[0m Configuring tools\n"
-            if [ -f ""]
             echo "$subfinder_setup" > $subfinder_config
             echo "$notify_setup" > $notify_config
         else
             echo -e "\033[33m[-]\033[0m Provider config file not found! Continuing without keys and hooks"
         fi
-
     }
 
     set_config
