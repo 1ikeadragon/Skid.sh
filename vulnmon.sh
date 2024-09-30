@@ -9,7 +9,7 @@ echo -e '
 
                       - @1ikeadragon
         
------------ASM MODE-----------                         
+-----------VULN MONITOR MODE-----------                         
 
 '
 
