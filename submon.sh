@@ -29,6 +29,15 @@ function run_monitoring() {
     echo -e "\e[32m[+]\e[0m Processing target: $target\n"
 
     function set_config() {
+        if [ ! -d "$HOME/.config/subfinder" ]; then
+            mkdir -p "$HOME/.config/subfinder"
+            echo -e "\e[32m[+]\e[0m Created subfinder config directory"
+        fi
+        if [ ! -d "$HOME/.config/notify" ]; then
+            mkdir -p "$HOME/.config/notify"
+            echo -e "\e[32m[+]\e[0m Created notify config directory"
+        fi
+
         if [ -f "$skidyml" ]; then
             echo -e "\e[32m[+]\e[0m skid.yaml found! Parsing config...\n"
 
@@ -48,8 +57,14 @@ function run_monitoring() {
     echo -e "\e[32m[+]\e[0m Probing target with httpx\n"
     host_probe=$(httpx -u "$target" -fr -silent -sc -title -td -server -retries 3 -fc 404 -lc)
     if [ -z "$host_probe" ]; then
-        echo -e "\n Host seems down. Did you type the right address?"
-        exit 1
+        echo -e "\n\e[31m[-]\e[0m Host seems down. Did you type the right address?"
+        read -p "Do you want to continue monitoring anyway? (y/n): " user_choice
+        if [[ "$user_choice" != "y" && "$user_choice" != "Y" ]]; then
+            echo -e "\e[31m[-]\e[0m Exiting monitoring...\n"
+            exit 1
+        else
+            echo -e "\e[32m[+]\e[0m Continuing with monitoring despite host status.\n"
+        fi
     fi
 
     echo -e "\n\e[32m[+]\e[0m Hunting subdomains with subfinder \n\n"
